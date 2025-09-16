@@ -19,7 +19,11 @@ public class DestinoService {
     }
 
     public List<Destino> getAll() {
-        return destinoRepository.findAll();
+
+        List<Destino> all = destinoRepository.findAll();
+        List<Destino> allFiltred = all.stream().filter(x -> x.getViagem() == null).toList();
+
+        return allFiltred;
     }
 
     public void createDestino(Destino destino) {
