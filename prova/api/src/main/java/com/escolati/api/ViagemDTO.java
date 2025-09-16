@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public record ViagemDTO(
     String nome,
     LocalDate dataSaida,
-    LocalDate dataChegado,
+    LocalDate dataChegada,
     BigDecimal valor
 ) {
 }

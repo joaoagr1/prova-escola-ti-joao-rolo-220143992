@@ -5,7 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -22,7 +25,28 @@ public class ViagemService {
         return viagemRepository.findAll();
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Transactional
     public void createViagem(Viagem viagem) {
+
+        if (viagem.getDestinos() != null) {
+
+            for (int i = 0; i < viagem.getDestinos().size(); i++) {
+                Destino destino = viagem.getDestinos().get(i);
+
+                if (destino.getId() != null) {
+
+                    destino = entityManager.merge(destino);
+                }
+
+                destino.setViagem(viagem);
+
+                viagem.getDestinos().set(i, destino);
+            }
+        }
+
         viagemRepository.save(viagem);
     }
 
@@ -47,12 +71,41 @@ public class ViagemService {
             viagem.setValor(dto.valor());
         }
 
-        if(dto.dataChegado() != null) {
-            viagem.setDataChegada(dto.dataChegado());
+        if(dto.dataChegada() != null) {
+            viagem.setDataChegada(dto.dataChegada());
         }
 
         viagemRepository.save(viagem);
 
+    }
+
+    public void addDestino(Long viagemId, Destino destino) {
+
+        Viagem viagem = viagemRepository.findById(viagemId)
+                .orElseThrow(() -> new EntityNotFoundException("Viagem com id: " + viagemId + " não encontrada."));
+
+        destino.setViagem(viagem);
+
+        viagem.getDestinos().add(destino);
+
+        viagemRepository.save(viagem);
+
+    }
+
+    public void removeDestino(Long viagemId, Long destinoId) {
+
+            Viagem viagem = viagemRepository.findById(viagemId)
+                    .orElseThrow(() -> new EntityNotFoundException("Viagem não encontrada"));
+
+
+            boolean removed = viagem.getDestinos().removeIf(destino -> destino.getId().equals(destinoId));
+
+            if (!removed) {
+                throw new EntityNotFoundException("Essa viagem não possui esse destino");
+            }
+
+
+            viagemRepository.save(viagem);
     }
 }
 

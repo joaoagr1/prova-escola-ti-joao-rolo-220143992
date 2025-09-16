@@ -1,3 +1,149 @@
-<p>teste</p>
+<div class="container">
+  <div class="main-section">
 
-<router-outlet />
+    <div class="form-container">
+      <h2>{{ editingViagem ? 'Editar Viagem' : 'Viagem' }}</h2>
+      <form (ngSubmit)="saveViagem()" #viagemForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeViagem">Nome da Viagem:</label>
+            <input type="text" id="nomeViagem" name="nomeViagem" [(ngModel)]="currentViagem.nome" required placeholder="Ex: Férias no Nordeste">
+          </div>
+          <div class="form-group">
+            <label for="dataSaida">Data de Saída:</label>
+            <input type="date" id="dataSaida" name="dataSaida" [(ngModel)]="currentViagem.dataSaida" required>
+          </div>
+          <div class="form-group">
+            <label for="dataChegada">Data de Chegada:</label>
+            <input type="date" id="dataChegada" name="dataChegada" [(ngModel)]="currentViagem.dataChegada" required>
+          </div>
+          <div class="form-group">
+            <label for="valor">Preço:</label>
+            <input type="number" id="valor" name="valor" [(ngModel)]="currentViagem.valor" required step="0.01" min="0" placeholder="0,00">
+          </div>
+        </div>
+
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="!viagemForm.valid">
+            {{ editingViagem ? 'Salvar Edição' : 'Criar Viagem' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEditViagem()">
+            Limpar
+          </button>
+        </div>
+      </form>
+    </div>
+<br>
+ <label>Destinos Adicionados:</label>
+ @for (destino of currentViagem.destinos; track destino){
+   <p>{{destino.nome}}</p>
+ }
+
+
+
+  </div>
+
+
+  <div class="secondary-section">
+
+    <br><br><br><br><br>
+
+    <div class="form-container">
+      <h2>Destino</h2>
+      <form (ngSubmit)="createDestino()" #destinoForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeDestino">Nome do Destino:</label>
+            <input type="text" id="nomeDestino" name="nomeDestino" [(ngModel)]="newDestino.nome" required placeholder="Ex: Cancún">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="!destinoForm.valid">
+              Criar Destino
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <h3>Destinos Disponíveis</h3>
+      @if (!destinos || destinos.length === 0) {
+        <p>Nenhum destino encontrado. Crie um acima!</p>
+      } @else {
+        <table class="data-table">
+          <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Adicionar</th>
+            <th>Deletar</th>
+
+          </tr>
+          </thead>
+          <tbody>
+            @for (destino of destinos; track destino.id) {
+              <tr>
+                <td>{{ destino.nome }}</td>
+                <td class="actions">
+                  <button class="btn btn-add" (click)="addDestinoToViagem(destino)">Adicionar à Viagem</button>
+                </td>
+                <td class="actions">
+                  <button class="btn btn-add" (click)="deleteDestino(destino)">Deletar Destino</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+
+  <br><br><br><br><br>
+
+  <div class="table-container">
+    <h3>Viagens Criadas</h3>
+    @if (!viagens || viagens.length === 0) {
+      <p>Nenhuma viagem encontrada.</p>
+    } @else {
+      <table class="data-table">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Datas</th>
+          <th>Preço</th>
+          <th>Destinos</th>
+          <th>Ações</th>
+          <th>Adicionar Destino</th>
+          <th>Remover Destino</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (viagem of viagens; track viagem.id) {
+            <tr>
+              <td>{{ viagem.nome }}</td>
+              <td>{{ viagem.dataSaida | date:'dd/MM/yyyy' }} - {{ viagem.dataChegada | date:'dd/MM/yyyy' }}</td>
+              <td>{{ viagem.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td>
+                @for (destino of viagem.destinos; track destino.id) {
+                  <span>{{ destino.nome }} </span>
+                } @empty {
+                  <span>Nenhum</span>
+                }
+              </td>
+              <td class="actions">
+                <button class="btn btn-edit" (click)="editViagem(viagem)">Editar</button>
+                <button *ngIf="viagem.id" class="btn btn-delete" (click)="deleteViagem(viagem.id!)">Excluir</button>
+              </td>
+              <td class="actions">
+                <button class="btn btn-add" (click)="openAddDestinoModal(viagem)">+</button>
+              </td>
+              <td class="actions">
+                <button class="btn btn-add" (click)="openExcludeDestinoModal(viagem)">-</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

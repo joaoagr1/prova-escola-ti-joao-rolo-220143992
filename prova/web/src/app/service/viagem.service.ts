@@ -1,25 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ViagemService {
-  readonly API_URL = 'http://localhost:8080';
+  private readonly API_URL = 'http://localhost:8080/api/viagens';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getAllViagens() {
-    return this.httpClient.get(`${this.API_URL}/viagens`)
-  }
-  addProduct(product : any) {
-    return this.httpClient.post(`${this.API_URL}/add-product`, product)
-  }
-  editProduct(product : any){
-    return this.httpClient.put(`${this.API_URL}/edit-product`, product)
-  }
-  deleteProduct(idProduct : any){
-    return  this.httpClient.delete(`${this.API_URL}/delete-product/${idProduct}`)
+  getAllViagens(): Observable<any> {
+    return this.http.get(this.API_URL);
   }
 
+  createViagem(viagem: any): Observable<any> {
+    console.log(viagem)
+    return this.http.post(this.API_URL, viagem);
+  }
+
+  updateViagem(viagem: any): Observable<any> {
+    return this.http.put(`${this.API_URL}/${viagem.id}`, viagem);
+  }
+
+  deleteViagem(id: any): Observable<any> {
+    console.log("nathan")
+    return this.http.delete(`${this.API_URL}/${id}`);
+  }
+
+
+  addDestinoToViagem(viagemId: number, destino: any): Observable<any> {
+    return this.http.post(`${this.API_URL}/${viagemId}/destinos`, destino);
+  }
+
+  excludeDestinoToViagem(viagemId: number, destinoName: any): Observable<any> {
+    return this.http.delete(`${this.API_URL}/${viagemId}/destinos/${destinoName}`);
+  }
 }
