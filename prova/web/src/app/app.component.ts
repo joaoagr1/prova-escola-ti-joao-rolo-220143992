@@ -60,6 +60,7 @@ export class AppComponent implements OnInit {
   }
 
   private loadViagens() {
+  this. loadDestinos()
     this.viagemService.getAllViagens().subscribe({
       next: (res: Viagem[]) => this.viagens = res,
       error: (e) => console.error('Erro ao carregar viagens:', e)
