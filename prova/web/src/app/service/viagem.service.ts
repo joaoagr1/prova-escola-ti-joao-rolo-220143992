@@ -34,6 +34,7 @@ export class ViagemService {
   }
 
   excludeDestinoToViagem(viagemId: number, destinoName: any): Observable<any> {
-    return this.http.delete(`${this.API_URL}/${viagemId}/destinos/${destinoName}`);
+    console.log(destinoName)
+    return this.http.delete(`${this.API_URL}/${viagemId}/destinos/name?destinoName=${destinoName}`);
   }
 }

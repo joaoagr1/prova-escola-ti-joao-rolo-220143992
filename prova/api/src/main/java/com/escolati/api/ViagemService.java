@@ -107,5 +107,20 @@ public class ViagemService {
 
             viagemRepository.save(viagem);
     }
+
+    public void removeDestinoByName(Long viagemId, String destinoName) {
+
+        Viagem viagem = viagemRepository.findById(viagemId)
+                .orElseThrow(() -> new EntityNotFoundException("Viagem não encontrada"));
+
+        boolean removed = viagem.getDestinos().removeIf(destino -> destino.getNome().equals(destinoName));
+
+        if (!removed) {
+            throw new EntityNotFoundException("Essa viagem não possui esse destino");
+        }
+
+        viagemRepository.save(viagem);
+
+    }
 }
 

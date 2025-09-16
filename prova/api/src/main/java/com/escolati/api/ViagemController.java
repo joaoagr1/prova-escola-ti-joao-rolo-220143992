@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -71,6 +72,12 @@ public class ViagemController {
     @DeleteMapping("/{viagemId}/destinos/{destinoId}")
     public ResponseEntity<Void> removeDestinoFromViagem(@PathVariable Long viagemId, @PathVariable Long destinoId) {
         viagemService.removeDestino(viagemId, destinoId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{viagemId}/destinos/name")
+    public ResponseEntity<Void> removeDestinoFromViagemByName(@PathVariable Long viagemId, @RequestParam String destinoName) {
+        viagemService.removeDestinoByName(viagemId, destinoName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

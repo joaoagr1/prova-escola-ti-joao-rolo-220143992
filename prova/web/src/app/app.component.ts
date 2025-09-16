@@ -159,8 +159,7 @@ export class AppComponent implements OnInit {
     const nomeDestino = prompt('Digite o nome do destino para excluir:');
 
     if (nomeDestino) {
-      const novoDestino = { nome: nomeDestino };
-      this.viagemService.excludeDestinoToViagem(viagem.id, novoDestino).subscribe({
+      this.viagemService.excludeDestinoToViagem(viagem.id, nomeDestino).subscribe({
         next: () => {
           alert('Destino removido com sucesso!');
           this.loadViagens();
