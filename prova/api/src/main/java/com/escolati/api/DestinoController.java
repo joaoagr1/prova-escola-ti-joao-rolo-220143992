@@ -50,6 +50,12 @@ public class DestinoController {
         return ResponseEntity.ok(all);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Destino>> getAllData() {
+        List<Destino> all = destinoService.getAllData();
+        return ResponseEntity.ok(all);
+    }
+
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody Destino destino) {
         destinoService.createDestino(destino);

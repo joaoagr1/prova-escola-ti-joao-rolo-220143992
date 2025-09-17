@@ -47,5 +47,9 @@ public class DestinoService {
         destinoRepository.save(viagem);
 
     }
+
+    public List<Destino> getAllData() {
+        return destinoRepository.findAll();
+    }
 }
 

@@ -128,13 +128,9 @@ export class AppComponent implements OnInit {
       this.currentViagem.destinos.push(destino);
     }
 
-    console.log(this.currentViagem.destinos)
 
   }
 
-  removeDestinoFromViagem(destino: Destino) {
-    this.currentViagem.destinos = this.currentViagem.destinos.filter(d => d.id !== destino.id);
-  }
 
   openAddDestinoModal(viagem: any) {
 
@@ -173,6 +169,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  deleteDestino(destino: Destino) {
+    this.destinoService.deleteDestino(destino.id).subscribe({
+      next: () => this.loadDestinos(),
+      error: (e) => console.error('Erro ao deletar:', e)
+    });
+
+  }
 
   private getDefaultViagem(): Viagem {
     return {
@@ -184,13 +187,6 @@ export class AppComponent implements OnInit {
     };
   }
 
-  deleteDestino(destino: Destino) {
-console.log("nathan")
-    this.destinoService.deleteDestino(destino.id).subscribe({
-      next: () => this.loadDestinos(),
-      error: (e) => console.error('Erro ao deletar:', e)
-    });
 
-  }
 
 }
